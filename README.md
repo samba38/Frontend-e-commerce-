@@ -46,7 +46,7 @@ src/services/api.js
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://backend-e-commerce-3-u60q.onrender.com",
+  baseURL: "https://backend-e-commerce-5-h0mz.onrender.com",
   withCredentials: true
 });
 export default api;
@@ -62,7 +62,7 @@ Render
 
 Netlify
 
-Vercel (I used Vercel)
+Vercel (I used Vercel):https://frontend-e-commerce-5dqz.vercel.app/
 
 
 📁 Project Structure
