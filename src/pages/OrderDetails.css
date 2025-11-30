@@ -1,0 +1,43 @@
+.order-details-container {
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+.order-box {
+  background: #f7f7f7;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.order-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-item {
+  padding: 12px;
+  background: #ffffff;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.item-name {
+  font-weight: bold;
+}
+
+.back-btn {
+  display: inline-block;
+  margin-top: 20px;
+  background: black;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.back-btn:hover {
+  background: #444;
+}

@@ -1,0 +1,47 @@
+.home-container{
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+
+}
+
+.home-image-icon{
+    height: 400px;
+    width: 550px;
+}
+
+.home-heading{
+    font-size: 25px;
+    font-weight: 500;
+}
+
+.home-paragraph{
+    font-size: 22px;
+    font-weight: 400;
+}
+
+@media (max-width: 768px) {
+    .home-image-icon{
+    height: 200px;
+    width: 180px;
+}
+
+.home-container{
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    min-width: 100vw;
+    
+}
+
+.home-heading{
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.home-paragraph{
+    font-size: 17px;
+    font-weight: 400;
+}
+
+}
