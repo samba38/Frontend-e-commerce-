@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
-import "./Login.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -17,14 +16,16 @@ const Login = () => {
     setError("");
 
     try {
-      // IMPORTANT: do NOT include withCredentials here
       const res = await api.post("/auth/login", { email, password });
 
-      loginUser({
-        id: res.data.userId,
-        name: res.data.name || "User",
-        email: email
-      });
+      loginUser(
+        {
+          id: res.data.userId,
+          email,
+          name: "User",
+        },
+        res.data.jwtToken // 🔥 token from backend
+      );
 
       navigate("/");
     } catch (err) {
@@ -33,15 +34,14 @@ const Login = () => {
   };
 
   return (
-    <div className="auth-container">
+    <div>
       <h2>Login</h2>
-
-      {error && <p className="error">{error}</p>}
+      {error && <p>{error}</p>}
 
       <form onSubmit={handleLogin}>
         <input
           type="email"
-          placeholder="Enter email"
+          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -49,7 +49,7 @@ const Login = () => {
 
         <input
           type="password"
-          placeholder="Enter password"
+          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -58,7 +58,7 @@ const Login = () => {
         <button type="submit">Login</button>
       </form>
 
-      <p className="switch-text">
+      <p>
         Don’t have an account? <Link to="/register">Register</Link>
       </p>
     </div>

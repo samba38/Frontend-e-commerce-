@@ -1,11 +1,18 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./Navbar.css";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();              // clears user + token
+    setMenuOpen(false);
+    navigate("/");         // ✅ go to HOME
+  };
 
   return (
     <nav className="navbar">
@@ -35,13 +42,7 @@ const Navbar = () => {
         {user && (
           <div className="user-section">
             <span className="user-icon">👤 {user.name}</span>
-            <button
-              className="logout-btn"
-              onClick={() => {
-                logout();
-                setMenuOpen(false);
-              }}
-            >
+            <button className="logout-btn" onClick={handleLogout}>
               Logout
             </button>
           </div>

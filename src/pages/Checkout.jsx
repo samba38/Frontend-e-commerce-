@@ -1,36 +1,18 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
-import "./Checkout.css";
 
 const Checkout = () => {
+  const navigate = useNavigate();
   const [cart, setCart] = useState([]);
-  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  const navigate = useNavigate();
-
-  // Check login
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/login");
-    }
-  }, [navigate]);
-
-  // Fetch cart items
   const fetchCart = async () => {
     try {
-      const res = await api.get("/cart", {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      });
-
-      setCart(res.data.items);
-      setTotal(res.data.totalPrice);
-    } catch (err) {
-      console.log("Cart load error:", err);
+      const res = await api.get("/cart", { withCredentials: true });
+      setCart(res.data.items || []);
+    } catch {
+      setCart([]);
     } finally {
       setLoading(false);
     }
@@ -40,61 +22,40 @@ const Checkout = () => {
     fetchCart();
   }, []);
 
-  // Place order
   const handlePlaceOrder = async () => {
     try {
-      const res = await api.post(
-        "/orders",
-        {},
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        }
-      );
-
+      const res = await api.post("/orders", {}, { withCredentials: true });
       navigate(`/order-success/${res.data.orderId}`);
     } catch (err) {
-      console.error("Order failed:", err);
-      alert("Order failed. Try again.");
+      alert("Order failed");
     }
   };
 
-  if (loading) return <h2 className="loading">Loading checkout...</h2>;
+  if (loading) return <h2>Loading checkout...</h2>;
+  if (cart.length === 0) return <h2>Your cart is empty</h2>;
+
+  const total = cart.reduce(
+    (sum, item) => sum + item.qty * item.product.price,
+    0
+  );
 
   return (
-    <div className="checkout-container">
+    <div>
       <h2>Checkout</h2>
 
-      <div className="checkout-box">
-        <h3>Order Summary</h3>
+      {cart.map(item => (
+        <div key={item._id}>
+          <p>{item.product.name}</p>
+          <p>Qty: {item.qty}</p>
+          <p>₹{item.qty * item.product.price}</p>
+        </div>
+      ))}
 
-        {cart.length === 0 ? (
-          <p>Your cart is empty.</p>
-        ) : (
-          <>
-            <ul className="checkout-items">
-              {cart.map((item) => (
-                <li key={item._id} className="checkout-item">
-                  <img src={item.product.image} alt="" />
-                  <div>
-                    <p className="name">{item.product.name}</p>
-                    <p>Size: {item.size}</p>
-                    <p>Qty: {item.qty}</p>
-                  </div>
-                  <p className="price">₹{item.product.price * item.qty}</p>
-                </li>
-              ))}
-            </ul>
+      <h3>Total: ₹{total}</h3>
 
-            <h3 className="total">Total: ₹{total}</h3>
-
-            <button className="place-order-btn" onClick={handlePlaceOrder}>
-              Place Order
-            </button>
-          </>
-        )}
-      </div>
+      <button onClick={handlePlaceOrder}>
+        Place Order
+      </button>
     </div>
   );
 };
